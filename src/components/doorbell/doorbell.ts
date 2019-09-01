@@ -4,11 +4,13 @@ import {BinaryValue, Gpio} from "onoff";
 export default class Doorbell {
     private button: Gpio;
     private outPin: Gpio;
+    private outBuzzer: Gpio;
     private ringTimeout: number | null = null;
 
     public constructor() {
         this.button = new Gpio(3, 'in', 'both');
         this.outPin = new Gpio(17, 'out');
+        this.outBuzzer = new Gpio(14, 'out');
 
         this.listen()
     }
@@ -29,6 +31,7 @@ export default class Doorbell {
 
     private onRing() {
         this.outPin.write(1);
+        this.outBuzzer.write(1);
 
         // @ts-ignore
         this.ringTimeout = setTimeout(() => {
@@ -44,5 +47,6 @@ export default class Doorbell {
 
     public reset() {
         this.outPin.write(0);
+        this.outBuzzer.write(0);
     }
 }

@@ -7,6 +7,7 @@ class Doorbell {
         this.ringTimeout = null;
         this.button = new onoff_1.Gpio(3, 'in', 'both');
         this.outPin = new onoff_1.Gpio(17, 'out');
+        this.outBuzzer = new onoff_1.Gpio(14, 'out');
         this.listen();
     }
     listen() {
@@ -22,6 +23,7 @@ class Doorbell {
     }
     onRing() {
         this.outPin.write(1);
+        this.outBuzzer.write(1);
         // @ts-ignore
         this.ringTimeout = setTimeout(() => {
             this.outPin.write(0);
@@ -34,6 +36,7 @@ class Doorbell {
     }
     reset() {
         this.outPin.write(0);
+        this.outBuzzer.write(0);
     }
 }
 exports.default = Doorbell;
