@@ -1,5 +1,6 @@
 import express = require('express');
 import dotenv from 'dotenv'
+import Doorbell from "./components/doorbell/doorbell";
 
 dotenv.config();
 
@@ -11,5 +12,5 @@ app.get('/', function (req, res) {
 });
 
 app.listen(3000, function () {
-    console.log('Example app listening on port 3000!');
+    new Doorbell();
 });

@@ -1,13 +1,27 @@
 import {notify} from "../../libraries/pushover";
+import {BinaryValue, Gpio} from "onoff";
 
 export default class Doorbell {
+    private button: Gpio;
+
     public constructor() {
+        this.button = new Gpio(3, 'in', 'both');
+
         this.listen()
     }
 
     private listen() {
-        console.log('listen')
-        //TODO: listen for input.
+        this.button.watch(this.onButtonValueChanged);
+    }
+
+    private onButtonValueChanged(error: Error | null | undefined, value: BinaryValue) {
+        if (null !== error) {
+            console.log(error);
+        }
+
+        if (1 === value) {
+            this.onRing();
+        }
     }
 
     private onRing() {
