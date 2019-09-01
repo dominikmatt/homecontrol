@@ -13,6 +13,10 @@ app.get('/', function (req, res) {
     res.send('Hello World!');
 });
 app.listen(3000, function () {
-    new doorbell_1.default();
+});
+const doorbell = new doorbell_1.default();
+process.on('SIGINT', function () {
+    doorbell.reset();
+    process.exit();
 });
 //# sourceMappingURL=app.js.map

@@ -4,15 +4,13 @@ const pushover_1 = require("../../libraries/pushover");
 const onoff_1 = require("onoff");
 class Doorbell {
     constructor() {
-        try {
-            this.button = new onoff_1.Gpio(3, 'in', 'both');
-            this.listen();
-        } catch (error) {
-            console.log(error)
-        }
+        this.ringTimeout = null;
+        this.button = new onoff_1.Gpio(3, 'in', 'both');
+        this.outPin = new onoff_1.Gpio(17, 'out');
+        this.listen();
     }
     listen() {
-        this.button.watch(this.onButtonValueChanged);
+        this.button.watch(this.onButtonValueChanged.bind(this));
     }
     onButtonValueChanged(error, value) {
         if (null !== error) {
@@ -23,11 +21,19 @@ class Doorbell {
         }
     }
     onRing() {
+        this.outPin.write(1);
+        // @ts-ignore
+        this.ringTimeout = setTimeout(() => {
+            this.outPin.write(0);
+        }, 2000);
         pushover_1.notify({
             message: 'One person has pressed the button!!!!',
             title: 'Doorbell',
             sound: 'bugle',
         });
+    }
+    reset() {
+        this.outPin.write(0);
     }
 }
 exports.default = Doorbell;

@@ -12,5 +12,13 @@ app.get('/', function (req, res) {
 });
 
 app.listen(3000, function () {
-    new Doorbell();
+
+});
+
+const doorbell: Doorbell = new Doorbell();
+
+process.on('SIGINT', function () { //#F
+    doorbell.reset();
+
+    process.exit();
 });
